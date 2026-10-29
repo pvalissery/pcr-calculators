@@ -4,10 +4,8 @@ This is a lightweight, browser-based calculator for setting up PCR master mixes 
 
 (https://pvalissery.github.io/pcr-calculators/) 
 
-## Why I made this
 If you work in molecular biology, you probably have a folder full of Excel spreadsheets with names like `Phusion_calc (conflicted copy).xlsx` or `Taq_rxns_FINAL.xlsx`. I got tired of opening Excel, clearing out old values, and re-typing everything every time I needed to run a reaction. Doing manual stoichiometry while your ice bucket is actively melting is a great way to mess up a reaction. This tool takes the core math from my personal lab spreadsheets and ports it into a clean, mobile-friendly web UI. 
 
-## What's in the box
 * **Taq PCR Calculator:** Standard master mix math based on reaction volume, target template concentration, and number of tubes. 
 * **Phusion PCR (Standard):** Calculates mix for standalone Phusion polymerase, dNTPs, and 5x Buffer.
 * **Phusion Hot Start Flex (2x Master Mix):** Quick calculations for the premixed 2x version, including extension time estimates based on amplicon size.
