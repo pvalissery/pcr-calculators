@@ -2,7 +2,7 @@
 
 **TL;DR:** A lightweight, browser-based calculator for setting up PCR master mixes and overlapping PCRs. No backend, no dependencies, just a single HTML file you can run anywhere. 
 
-[👉 **Click here to use the calculator**](https://[your-username].github.io/[repo-name]) *(Note: swap in your actual GitHub Pages link here)*
+[👉 **Click here to use the calculator**](https://pvalissery.github.io/pcr-calculators/) 
 
 ## Why I made this
 If you work in molecular biology, you probably have a folder full of Excel spreadsheets with names like `Phusion_calc (conflicted copy).xlsx` or `Taq_rxns_FINAL.xlsx`. I got tired of opening Excel, clearing out old values, and re-typing everything every time I needed to run a gel. 
