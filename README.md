@@ -1,13 +1,11 @@
 # PCR Master Mix Calculator
 
-**TL;DR:** A lightweight, browser-based calculator for setting up PCR master mixes and overlapping PCRs. No backend, no dependencies, just a single HTML file you can run anywhere. 
+This is a lightweight, browser-based calculator for setting up PCR master mixes and overlapping PCRs.
 
 [👉 **Click here to use the calculator**](https://pvalissery.github.io/pcr-calculators/) 
 
 ## Why I made this
-If you work in molecular biology, you probably have a folder full of Excel spreadsheets with names like `Phusion_calc (conflicted copy).xlsx` or `Taq_rxns_FINAL.xlsx`. I got tired of opening Excel, clearing out old values, and re-typing everything every time I needed to run a gel. 
-
-Doing manual stoichiometry while your ice bucket is actively melting is a great way to mess up a reaction. This tool takes the core math from my personal lab spreadsheets and ports it into a clean, mobile-friendly web UI. 
+If you work in molecular biology, you probably have a folder full of Excel spreadsheets with names like `Phusion_calc (conflicted copy).xlsx` or `Taq_rxns_FINAL.xlsx`. I got tired of opening Excel, clearing out old values, and re-typing everything every time I needed to run a reaction. Doing manual stoichiometry while your ice bucket is actively melting is a great way to mess up a reaction. This tool takes the core math from my personal lab spreadsheets and ports it into a clean, mobile-friendly web UI. 
 
 ## What's in the box
 * **Taq PCR Calculator:** Standard master mix math based on reaction volume, target template concentration, and number of tubes. 
@@ -18,7 +16,7 @@ Doing manual stoichiometry while your ice bucket is actively melting is a great 
 ## How to use it
 Since it's built entirely with HTML, CSS (Tailwind), and vanilla JavaScript, you have two options:
 1. **The easy way:** Just bookmark the live GitHub Pages link at the top of this readme and pull it up on your phone or lab tablet. 
-2. **The offline way:** Clone this repo or just download the `index.html` file, double-click it, and it will run locally in your browser without an internet connection.
+2. **The offline way:** Clone this repo or just download the `index.html` file, double-click it, and it will run locally in your browser **without an internet connection**.
 
 ## Caveats
 * The Overlapping PCR calculator assumes standard base pair molecular weights. 
