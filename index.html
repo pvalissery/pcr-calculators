@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praveesh's PCR Toolset</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for table containers */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        .tab-btn.active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .negative-val {
+            color: #ef4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <div class="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- Header -->
+        <header class="mb-8 text-center sm:text-left">
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-3">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                Praveesh's PCR Toolset
+            </h1>
+            <p class="text-slate-500 mt-2 text-sm sm:text-base">A comprehensive suite of real-time molecular biology calculators.</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="flex overflow-x-auto border-b border-slate-200 mb-6 no-scrollbar">
+            <button class="tab-btn active px-4 py-3 whitespace-nowrap text-sm sm:text-base text-slate-600 hover:text-blue-600 transition-colors" data-target="taq-panel">Taq PCR</button>
+            <button class="tab-btn px-4 py-3 whitespace-nowrap text-sm sm:text-base text-slate-600 hover:text-blue-600 transition-colors" data-target="phusion-panel">Phusion PCR</button>
+            <button class="tab-btn px-4 py-3 whitespace-nowrap text-sm sm:text-base text-slate-600 hover:text-blue-600 transition-colors" data-target="dilution-panel">Template & Extension</button>
+            <button class="tab-btn px-4 py-3 whitespace-nowrap text-sm sm:text-base text-slate-600 hover:text-blue-600 transition-colors" data-target="overlap-panel">Overlapping PCR</button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 sm:p-6 mb-10">
+
+            <!-- ================= Taq PCR Panel ================= -->
+            <div id="taq-panel" class="tab-panel">
+                <h2 class="text-xl font-semibold text-slate-800 mb-4 border-b pb-2">Taq PCR (2x Master Mix) Calculator</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Inputs -->
+                    <div class="space-y-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <h3 class="font-medium text-slate-700 mb-3">Reaction Parameters</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Reaction Vol (µl)</label>
+                                <input type="number" id="taq-vol" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="20" min="1" step="1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Number of Rxns</label>
+                                <input type="number" id="taq-rxn" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="1" min="1" step="0.5">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">DMSO (%)</label>
+                                <input type="number" id="taq-dmso" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="0" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Forward Primer (µl)</label>
+                                <input type="number" id="taq-fp" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="1" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Reverse Primer (µl)</label>
+                                <input type="number" id="taq-rp" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="1" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">DNA Template (µl)</label>
+                                <input type="number" id="taq-dna" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="1" min="0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Outputs -->
+                    <div class="flex flex-col justify-center">
+                        <h3 class="font-medium text-slate-700 mb-3">Reaction Mix Volumes</h3>
+                        <div class="overflow-x-auto table-container rounded-lg border border-slate-200">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-slate-600 bg-slate-100 uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3">Component</th>
+                                        <th class="px-4 py-3">1x (µl)</th>
+                                        <th class="px-4 py-3">Nx (µl)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">2x Master Mix</td>
+                                        <td class="px-4 py-2" id="out-taq-mm-1x">10.00</td>
+                                        <td class="px-4 py-2" id="out-taq-mm-nx">10.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Forward Primer</td>
+                                        <td class="px-4 py-2" id="out-taq-fp-1x">1.00</td>
+                                        <td class="px-4 py-2" id="out-taq-fp-nx">1.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Reverse Primer</td>
+                                        <td class="px-4 py-2" id="out-taq-rp-1x">1.00</td>
+                                        <td class="px-4 py-2" id="out-taq-rp-nx">1.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">DMSO</td>
+                                        <td class="px-4 py-2" id="out-taq-dmso-1x">0.00</td>
+                                        <td class="px-4 py-2" id="out-taq-dmso-nx">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">DNA Template</td>
+                                        <td class="px-4 py-2" id="out-taq-dna-1x">1.00</td>
+                                        <td class="px-4 py-2 text-slate-400 text-xs italic">Add separately</td>
+                                    </tr>
+                                    <tr class="bg-blue-50/50">
+                                        <td class="px-4 py-2 font-medium text-blue-800">Nuclease-Free Water</td>
+                                        <td class="px-4 py-2 font-bold" id="out-taq-water-1x">7.00</td>
+                                        <td class="px-4 py-2 font-bold" id="out-taq-water-nx">7.00</td>
+                                    </tr>
+                                    <tr class="bg-slate-800 text-white">
+                                        <td class="px-4 py-2 font-bold">Total Volume</td>
+                                        <td class="px-4 py-2 font-bold" id="out-taq-total-1x">20.00</td>
+                                        <td class="px-4 py-2 font-bold" id="out-taq-total-nx">20.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= Phusion PCR Panel ================= -->
+            <div id="phusion-panel" class="tab-panel hidden">
+                <h2 class="text-xl font-semibold text-slate-800 mb-4 border-b pb-2">Phusion PCR Components Calculator</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                    <!-- Inputs -->
+                    <div class="md:col-span-7 space-y-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <h3 class="font-medium text-slate-700 mb-3">Reaction Parameters</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Reaction Vol (µl)</label>
+                                <input type="number" id="phu-vol" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="50" min="1" step="1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Number of Rxns</label>
+                                <input type="number" id="phu-rxn" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="1" min="1" step="0.5">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">DMSO (%)</label>
+                                <input type="number" id="phu-dmso" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="3" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">dNTP Final (µM)</label>
+                                <input type="number" id="phu-dntp-work" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="200" min="0" step="10">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">dNTP Stock (mM)</label>
+                                <input type="number" id="phu-dntp-stock" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="10" min="0.1" step="1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">DNA Template (µl)</label>
+                                <input type="number" id="phu-dna" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="1" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Forward Primer (µl)</label>
+                                <input type="number" id="phu-fp" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="2.5" min="0" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 mb-1">Reverse Primer (µl)</label>
+                                <input type="number" id="phu-rp" class="w-full px-3 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 outline-none" value="2.5" min="0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Outputs -->
+                    <div class="md:col-span-5 flex flex-col justify-center">
+                        <h3 class="font-medium text-slate-700 mb-3">Reaction Mix Volumes</h3>
+                        <div class="overflow-x-auto table-container rounded-lg border border-slate-200">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-slate-600 bg-slate-100 uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3">Component</th>
+                                        <th class="px-4 py-3">1x (µl)</th>
+                                        <th class="px-4 py-3">Nx (µl)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">5x Phusion Buffer</td>
+                                        <td class="px-4 py-2" id="out-phu-buf-1x">10.00</td>
+                                        <td class="px-4 py-2" id="out-phu-buf-nx">10.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">dNTPs</td>
+                                        <td class="px-4 py-2" id="out-phu-dntp-1x">1.00</td>
+                                        <td class="px-4 py-2" id="out-phu-dntp-nx">1.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Forward Primer</td>
+                                        <td class="px-4 py-2" id="out-phu-fp-1x">2.50</td>
+                                        <td class="px-4 py-2" id="out-phu-fp-nx">2.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Reverse Primer</td>
+                                        <td class="px-4 py-2" id="out-phu-rp-1x">2.50</td>
+                                        <td class="px-4 py-2" id="out-phu-rp-nx">2.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">DMSO</td>
+                                        <td class="px-4 py-2" id="out-phu-dmso-1x">1.50</td>
+                                        <td class="px-4 py-2" id="out-phu-dmso-nx">1.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">Phusion Polymerase</td>
+                                        <td class="px-4 py-2" id="out-phu-poly-1x">0.50</td>
+                                        <td class="px-4 py-2" id="out-phu-poly-nx">0.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-2 font-medium">DNA Template</td>
+                                        <td class="px-4 py-2" id="out-phu-dna-1x">1.00</td>
+                                        <td class="px-4 py-2 text-slate-400 text-xs italic">Add separately</td>
+                                    </tr>
+                                    <tr class="bg-blue-50/50">
+                                        <td class="px-4 py-2 font-medium text-blue-800">Nuclease-Free Water</td>
+                                        <td class="px-4 py-2 font-bold" id="out-phu-water-1x">31.00</td>
+                                        <td class="px-4 py-2 font-bold" id="out-phu-water-nx">31.00</td>
+                                    </tr>
+                                    <tr class="bg-slate-800 text-white">
+                                        <td class="px-4 py-2 font-bold">Total Volume</td>
+                                        <td class="px-4 py-2 font-bold" id="out-phu-total-1x">50.00</td>
+                                        <td class="px-4 py-2 font-bold" id="out-phu-total-nx">50.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= Dilution & Extension Panel ================= -->
+            <div id="dilution-panel" class="tab-panel hidden">
+                <h2 class="text-xl font-semibold text-slate-800 mb-4 border-b pb-2">Template Dilution & Extension Time</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Extension Time -->
+                    <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col h-full">
+                        <div class="flex items-center gap-2 mb-4 text-blue-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <h3 class="font-semibold text-lg text-slate-700">Phusion Extension Time</h3>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4">Calculates based on standard Phusion protocol (30s per kb).</p>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Amplicon Size (kb)</label>
+                            <input type="number" id="ext-size" class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-lg" value="1.5" min="0.1" step="0.1">
+                        </div>
+                        
+                        <div class="mt-auto bg-blue-50 p-4 rounded-lg text-center">
+                            <span class="block text-sm text-blue-600 font-medium mb-1">Required Extension Time</span>
+                            <div class="text-3xl font-bold text-blue-900" id="out-ext-time">45 <span class="text-lg font-normal">sec</span></div>
+                            <div class="text-sm text-blue-700 mt-1" id="out-ext-min">(0 min 45 sec)</div>
+                        </div>
+                    </div>
+
+                    <!-- Template Dilution -->
+                    <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col h-full">
+                        <div class="flex items-center gap-2 mb-4 text-emerald-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                            <h3 class="font-semibold text-lg text-slate-700">DNA Template Dilution</h3>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4">Calculates water needed for 1 µl of current template.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Current Conc (ng/µl)</label>
+                                <input type="number" id="dil-curr" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none" value="850" min="1" step="10">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Target Conc (ng/µl)</label>
+                                <input type="number" id="dil-targ" class="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none" value="50" min="1" step="1">
+                            </div>
+                        </div>
+
+                        <div class="mt-auto bg-emerald-50 p-4 rounded-lg text-center border border-emerald-100">
+                            <span class="block text-sm text-emerald-700 font-medium mb-2">To reach your target, mix:</span>
+                            <div class="flex items-center justify-center gap-4 text-lg">
+                                <div class="text-center">
+                                    <span class="block font-bold text-emerald-900">1.0 µl</span>
+                                    <span class="text-xs text-emerald-600">DNA</span>
+                                </div>
+                                <span class="text-slate-400 font-bold">+</span>
+                                <div class="text-center">
+                                    <span class="block font-bold text-emerald-900" id="out-dil-water">16.0 µl</span>
+                                    <span class="text-xs text-emerald-600">Water</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= Overlapping PCR Panel ================= -->
+            <div id="overlap-panel" class="tab-panel hidden">
+                <h2 class="text-xl font-semibold text-slate-800 mb-4 border-b pb-2">Overlapping PCR Equimolar Mix</h2>
+                <p class="text-sm text-slate-500 mb-6">Mixes two fragments in an equimolar (1:1) ratio for a combined mass of 100ng.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Fragment 1 -->
+                    <div class="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-indigo-800">Fragment 1</h3>
+                            <input type="text" id="ovl-name1" class="px-2 py-1 text-sm border rounded bg-white text-slate-700 outline-none w-32 focus:ring-1 focus:ring-indigo-300" placeholder="Name (e.g. Insert)" value="Fragment A">
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Concentration (ng/µl)</label>
+                                <input type="number" id="ovl-conc1" class="w-full px-3 py-2 border border-indigo-200 rounded-md focus:ring-1 focus:ring-indigo-500 outline-none" value="65" min="0.1" step="1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Size (bp)</label>
+                                <input type="number" id="ovl-size1" class="w-full px-3 py-2 border border-indigo-200 rounded-md focus:ring-1 focus:ring-indigo-500 outline-none" value="1200" min="1" step="10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fragment 2 -->
+                    <div class="bg-purple-50/50 p-4 rounded-lg border border-purple-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-purple-800">Fragment 2</h3>
+                            <input type="text" id="ovl-name2" class="px-2 py-1 text-sm border rounded bg-white text-slate-700 outline-none w-32 focus:ring-1 focus:ring-purple-300" placeholder="Name (e.g. Backbone)" value="Fragment B">
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Concentration (ng/µl)</label>
+                                <input type="number" id="ovl-conc2" class="w-full px-3 py-2 border border-purple-200 rounded-md focus:ring-1 focus:ring-purple-500 outline-none" value="40" min="0.1" step="1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Size (bp)</label>
+                                <input type="number" id="ovl-size2" class="w-full px-3 py-2 border border-purple-200 rounded-md focus:ring-1 focus:ring-purple-500 outline-none" value="3500" min="1" step="10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overlap Output -->
+                <div class="bg-slate-800 text-white rounded-xl p-6 shadow-md">
+                    <h3 class="font-medium text-slate-300 text-sm mb-4 uppercase tracking-wider text-center">Required Mixing Volumes (Total 100ng)</h3>
+                    <div class="flex flex-col sm:flex-row justify-around items-center gap-6">
+                        <div class="text-center w-full sm:w-1/3 bg-slate-700/50 p-4 rounded-lg">
+                            <span class="block text-2xl font-bold text-indigo-300 mb-1" id="out-ovl-vol1">0.39 µl</span>
+                            <span class="text-sm text-slate-300 truncate w-full block" id="out-ovl-lbl1">Fragment A</span>
+                            <span class="text-xs text-slate-400 block mt-1" id="out-ovl-mass1">(25.53 ng)</span>
+                        </div>
+                        <div class="text-slate-400 text-2xl font-light">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        <div class="text-center w-full sm:w-1/3 bg-slate-700/50 p-4 rounded-lg">
+                            <span class="block text-2xl font-bold text-purple-300 mb-1" id="out-ovl-vol2">1.86 µl</span>
+                            <span class="text-sm text-slate-300 truncate w-full block" id="out-ovl-lbl2">Fragment B</span>
+                            <span class="text-xs text-slate-400 block mt-1" id="out-ovl-mass2">(74.47 ng)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Utilities ---
+        const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+        const setHTML = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) {
+                // If number is negative and relates to water volume, turn red
+                if (typeof val === 'number') {
+                    if (val < 0 && id.includes('water')) {
+                        el.classList.add('negative-val');
+                    } else {
+                        el.classList.remove('negative-val');
+                    }
+                    el.innerHTML = val.toFixed(2);
+                } else {
+                    el.innerHTML = val;
+                }
+            }
+        };
+
+        // --- Tab Logic ---
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active from all
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+                
+                // Add active to clicked
+                button.classList.add('active');
+                const target = button.getAttribute('data-target');
+                document.getElementById(target).classList.remove('hidden');
+            });
+        });
+
+        // --- Taq PCR Calculator ---
+        function calcTaq() {
+            const vol = getVal('taq-vol');
+            const rxns = getVal('taq-rxn');
+            const dmso_pct = getVal('taq-dmso');
+            const fp = getVal('taq-fp');
+            const rp = getVal('taq-rp');
+            const dna = getVal('taq-dna');
+
+            // 1x Calcs
+            const mm = vol / 2;
+            const dmso = vol * (dmso_pct / 100);
+            const water = vol - (mm + dmso + fp + rp + dna);
+
+            // Update UI
+            setHTML('out-taq-mm-1x', mm);
+            setHTML('out-taq-mm-nx', mm * rxns);
+            setHTML('out-taq-fp-1x', fp);
+            setHTML('out-taq-fp-nx', fp * rxns);
+            setHTML('out-taq-rp-1x', rp);
+            setHTML('out-taq-rp-nx', rp * rxns);
+            setHTML('out-taq-dmso-1x', dmso);
+            setHTML('out-taq-dmso-nx', dmso * rxns);
+            setHTML('out-taq-dna-1x', dna); // DNA is added separately for Nx
+            
+            setHTML('out-taq-water-1x', water);
+            setHTML('out-taq-water-nx', water * rxns); // Nx Master mix doesn't usually scale DNA directly in the master pot, but we'll scale water for the master mix volume minus DNA. 
+            // Standard practice: Master mix total volume per rxn = vol - DNA. 
+            // Total master mix pot = (vol - DNA) * rxns
+            
+            setHTML('out-taq-total-1x', vol);
+            setHTML('out-taq-total-nx', (vol - dna) * rxns); // Master mix total without DNA
+        }
+
+        document.querySelectorAll('#taq-panel input').forEach(input => {
+            input.addEventListener('input', calcTaq);
+        });
+
+        // --- Phusion PCR Calculator ---
+        function calcPhusion() {
+            const vol = getVal('phu-vol');
+            const rxns = getVal('phu-rxn');
+            const dmso_pct = getVal('phu-dmso');
+            const dntp_work = getVal('phu-dntp-work'); // uM
+            const dntp_stock = getVal('phu-dntp-stock'); // mM
+            const dna = getVal('phu-dna');
+            const fp = getVal('phu-fp');
+            const rp = getVal('phu-rp');
+
+            // 1x Calcs
+            const buf = vol / 5;
+            // Formula: C1V1 = C2V2 => V1 = (C2 * V2) / C1
+            // (dntp_work_uM / 1000 to get mM) * vol / dntp_stock_mM
+            const dntp = ((dntp_work / 1000) * vol) / dntp_stock;
+            const dmso = vol * (dmso_pct / 100);
+            const poly = vol * 0.01; // 1%
+            const water = vol - (buf + dntp + dmso + poly + fp + rp + dna);
+
+            // Update UI
+            setHTML('out-phu-buf-1x', buf);
+            setHTML('out-phu-buf-nx', buf * rxns);
+            setHTML('out-phu-dntp-1x', dntp);
+            setHTML('out-phu-dntp-nx', dntp * rxns);
+            setHTML('out-phu-fp-1x', fp);
+            setHTML('out-phu-fp-nx', fp * rxns);
+            setHTML('out-phu-rp-1x', rp);
+            setHTML('out-phu-rp-nx', rp * rxns);
+            setHTML('out-phu-dmso-1x', dmso);
+            setHTML('out-phu-dmso-nx', dmso * rxns);
+            setHTML('out-phu-poly-1x', poly);
+            setHTML('out-phu-poly-nx', poly * rxns);
+            setHTML('out-phu-dna-1x', dna);
+            
+            setHTML('out-phu-water-1x', water);
+            setHTML('out-phu-water-nx', water * rxns);
+            
+            setHTML('out-phu-total-1x', vol);
+            setHTML('out-phu-total-nx', (vol - dna) * rxns); // Master mix pot
+        }
+
+        document.querySelectorAll('#phusion-panel input').forEach(input => {
+            input.addEventListener('input', calcPhusion);
+        });
+
+        // --- Template Dilution & Extension ---
+        function calcDilutionExt() {
+            // Extension
+            const size = getVal('ext-size');
+            const seconds = size * 30;
+            const mins = Math.floor(seconds / 60);
+            const remSecs = Math.round(seconds % 60);
+            
+            document.getElementById('out-ext-time').innerHTML = `${Math.round(seconds)} <span class="text-lg font-normal">sec</span>`;
+            document.getElementById('out-ext-min').innerText = `(${mins} min ${remSecs} sec)`;
+
+            // Dilution
+            const curr = getVal('dil-curr');
+            const targ = getVal('dil-targ');
+            
+            let water = 0;
+            if (targ > 0 && curr >= targ) {
+                water = (curr / targ) - 1;
+            } else if (curr > 0 && curr < targ) {
+                water = -1; // Error state
+            }
+            
+            const waterOut = document.getElementById('out-dil-water');
+            if (water < 0) {
+                waterOut.innerText = "N/A";
+                waterOut.classList.add('text-red-500');
+            } else {
+                waterOut.innerText = `${water.toFixed(1)} µl`;
+                waterOut.classList.remove('text-red-500');
+            }
+        }
+
+        document.querySelectorAll('#dilution-panel input').forEach(input => {
+            input.addEventListener('input', calcDilutionExt);
+        });
+
+        // --- Overlapping PCR ---
+        function calcOverlap() {
+            const name1 = document.getElementById('ovl-name1').value || 'Fragment 1';
+            const conc1 = getVal('ovl-conc1');
+            const size1 = getVal('ovl-size1');
+            
+            const name2 = document.getElementById('ovl-name2').value || 'Fragment 2';
+            const conc2 = getVal('ovl-conc2');
+            const size2 = getVal('ovl-size2');
+
+            // Set labels
+            document.getElementById('out-ovl-lbl1').innerText = name1;
+            document.getElementById('out-ovl-lbl2').innerText = name2;
+
+            if(size1 > 0 && size2 > 0 && conc1 > 0 && conc2 > 0) {
+                const totalSize = size1 + size2;
+                const mass1 = 100 * (size1 / totalSize);
+                const mass2 = 100 * (size2 / totalSize);
+                
+                const vol1 = mass1 / conc1;
+                const vol2 = mass2 / conc2;
+
+                setHTML('out-ovl-vol1', vol1);
+                document.getElementById('out-ovl-vol1').innerText += ' µl';
+                setHTML('out-ovl-vol2', vol2);
+                document.getElementById('out-ovl-vol2').innerText += ' µl';
+                
+                document.getElementById('out-ovl-mass1').innerText = `(${mass1.toFixed(2)} ng)`;
+                document.getElementById('out-ovl-mass2').innerText = `(${mass2.toFixed(2)} ng)`;
+            } else {
+                document.getElementById('out-ovl-vol1').innerText = '- µl';
+                document.getElementById('out-ovl-vol2').innerText = '- µl';
+                document.getElementById('out-ovl-mass1').innerText = `(- ng)`;
+                document.getElementById('out-ovl-mass2').innerText = `(- ng)`;
+            }
+        }
+
+        document.querySelectorAll('#overlap-panel input').forEach(input => {
+            input.addEventListener('input', calcOverlap);
+        });
+
+        // --- Initialize calculations on load ---
+        window.addEventListener('DOMContentLoaded', () => {
+            calcTaq();
+            calcPhusion();
+            calcDilutionExt();
+            calcOverlap();
+        });
+    </script>
+</body>
+</html>
